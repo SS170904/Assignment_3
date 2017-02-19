@@ -33,7 +33,7 @@ function NarrowItDownController(MenuSearchService) {
   //searchController.searchTerm = '';
 
   searchController.getMenuItems = function (searchTerm) {
-    if (searchTerm != '' )
+    if (searchTerm )
      {
        searchController.showMessage = '';
         var promise = MenuSearchService.getMatchedMenuItems(searchTerm);
