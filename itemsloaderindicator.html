@@ -1,8 +1,18 @@
 <div class ="form-group" style="float:left;">
-   <ol >
-        <li ng-repeat="items in searchDirCtrl.found">
-        {{items.description}}
-        <button ng-click="searchDirCtrl.onRemove({index: $index});">Remove Item</button>
-        </li>
-  <ul>
+   <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Short Name </th>
+            <th>Description </th>
+            <th>&nbsp;</th>
+          </tr>
+        </thead>
+        <tr ng-repeat="items in searchDirCtrl.found">
+          <td> {{items.name}} </td>
+          <td> {{items.short_name}} </td>
+         <td> {{items.description}} </td>
+        <td><button ng-click="searchDirCtrl.onRemove({index: $index});">Remove Item</button></td>
+      </tr>
+  </table>
 </div>

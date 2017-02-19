@@ -21,8 +21,10 @@
     </div>
 
     <!-- found-items should be implemented as a component -->
-    <found-items found="searchCtrl.found" on-Remove="searchCtrl.removeItem(index)" ></found-items>
-    <span>{{searchCtrl.showMessage}}</>
+    <div ng-show ="searchCtrl.found.length>0">
+      <found-items found="searchCtrl.found" on-Remove="searchCtrl.removeItem(index)" ></found-items>
+    </div>
+    <div class="text-warning">{{searchCtrl.showMessage}}</div>
   </div>
 
 </body>

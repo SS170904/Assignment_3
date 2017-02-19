@@ -30,7 +30,7 @@ NarrowItDownController.$inject = ['MenuSearchService'];
 function NarrowItDownController(MenuSearchService) {
 
   var searchController = this;
-  searchController.searchTerm = ' ';
+  //searchController.searchTerm = '';
 
   searchController.getMenuItems = function (searchTerm) {
     if (searchTerm != '' )
