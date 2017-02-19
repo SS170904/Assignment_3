@@ -1,0 +1,8 @@
+<div class ="form-group" style="float:left;">
+   <ol >
+        <li ng-repeat="items in searchDirCtrl.found">
+        {{items.description}}
+        <button ng-click="searchDirCtrl.onRemove({index: $index});">Remove Item</button>
+        </li>
+  <ul>
+</div>

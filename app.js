@@ -1,81 +1,95 @@
 (function (){
   'use strict';
-  angular.module('ShoppingListApp',[])
-      .controller('ToBuyController',  ToBuyController  )
-      .controller('AlreadyBoughtController',  AlreadyBoughtController )
-      .service('ShoppingListCheckOffService', ShoppingListCheckOffService);
+  angular.module('MenuSearchApp',[])
+      .controller('NarrowItDownController',  NarrowItDownController   )
+      .service('MenuSearchService', MenuSearchService)
+      .directive('foundItems', FoundItemsDirective)
+      .constant('ApiBasePath', "https://davids-restaurant.herokuapp.com");
 
-    ToBuyController.$inject = ['ShoppingListCheckOffService'];
-    AlreadyBoughtController.$inject =  ['ShoppingListCheckOffService'];
+      function FoundItemsDirective() {
+        var ddo = {
+          templateUrl: 'itemsloaderindicator.html',
+          scope: {
+            found: '<',
+          //  myTitle: '@title',
+          //  badRemove: '=',
+           onRemove: '&'
+          },
+          controller: NarrowItDownDirectiveController,
+          controllerAs: 'searchDirCtrl',
+          bindToController: true
+          //link: shoppingListDirectiveLink
+        };
+
+      return ddo;
+      }
 
 
-function ToBuyController(ShoppingListCheckOffService) {
+      function NarrowItDownDirectiveController() {
+        /*
+        var searchDirCtrl = this;
 
-  var showList = this;
+        searchDirCtrl.onRemove = function () {
+        //  for (var i = 1; i < list.items.length; i++) {
+            var name = list.found[list.found.length-1].description;
+            if (name.toLowerCase().indexOf("tofu") !== -1) {
+              return true;
+            }
 
-  showList.ToBuyitems = ShoppingListCheckOffService.getItems();
-  showList.AddRemoveItem = function(itemIndex) {
-    ShoppingListCheckOffService.AddRemoveItem(itemIndex);
+          //}
+
+          return false;
+
+        };
+        */
+      }
+
+
+NarrowItDownController.$inject = ['MenuSearchService'];
+function NarrowItDownController(MenuSearchService) {
+
+  var searchController = this;
+  searchController.found = [];
+
+  searchController.getMenuItems = function (searchTerm) {
+    var promise = MenuSearchService.getMatchedMenuItems(searchTerm);
+
+    promise.then(function (response){
+      var i = 0;
+
+      for (i=0;i<=response.data.menu_items.length-1;i++){
+
+        if (response.data.menu_items[i].description.toLowerCase().indexOf(searchTerm) !== -1){
+          searchController.found.push(response.data.menu_items[i]);
+        }
+      }
+    })
+    .catch(function(error){
+      console.log("Something went wrong !");
+    });
   }
+
+  searchController.removeItem = function(itemIndex) {
+    searchController.found.splice (itemIndex, 1);
+  }
+
 }
 
-function AlreadyBoughtController(ShoppingListCheckOffService) {
+MenuSearchService.$inject = ['$http', 'ApiBasePath'];
+function MenuSearchService($http, ApiBasePath) {
 
-  var viewList = this;
+    var menuService = this;
 
-  viewList.Boughtitems = ShoppingListCheckOffService.getBoughtItems();
-}
+    var foundArray=[];
 
-function ShoppingListCheckOffService() {
-    var shopService = this;
+    menuService.getMatchedMenuItems = function(searchItem)  {
+      var response =  $http({
+        method: "GET",
+        url: (ApiBasePath + "/menu_items.json")
+      });
 
-    // List of shopping items
-    var ToBuyitems =[
-  {
-    name: "Apples",
-    quantity: "5"
-  },
-  {
-    name: "Biscuits",
-    quantity: "2 pack"
-  },
-  {
-    name: "Cherries",
-    quantity: "3 packs"
-  },
-  {
-    name: "Chocolate",
-    quantity: "5"
-  },
-  {
-    name: "Coffee",
-    quantity: "1 packet"
-  }
-];
-
-    var BoughtItems=[];
-
-  /*  service.addItem = function (itemName, quantity) {
-      var item = {
-        name: itemName,
-        quantity: quantity
-      };
-      items.push(item);
-    }; */
-
-    shopService.AddRemoveItem = function (itemIdex) {
-      BoughtItems.push(ToBuyitems[itemIdex]);
-      ToBuyitems.splice(itemIdex, 1);
+      return response;
     };
 
-    shopService.getItems = function () {
-      return ToBuyitems;
-    };
-
-    shopService.getBoughtItems = function () {
-      return BoughtItems;
-    };
-  }
-
-
+    }
 })();
