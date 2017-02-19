@@ -19,10 +19,10 @@
     <div class="form-group narrow-button">
       <button class="btn btn-primary" ng-click="searchCtrl.getMenuItems(search)">Narrow It Down For Me!</button>
     </div>
-    <p>
+
     <!-- found-items should be implemented as a component -->
     <found-items found="searchCtrl.found" on-Remove="searchCtrl.removeItem(index)" ></found-items>
-  </p>
+    <span>{{searchCtrl.showMessage}}</>
   </div>
 
 </body>
